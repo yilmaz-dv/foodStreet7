@@ -1,0 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
+html, #app{
+  font-family: Poppins;
+  background-color: #F8F8F8;
+}
+.btn-primary{
+  background-color: #F46801 !important;
+  color: #fff !important;
+  border-color: #F46801 !important;
+}
