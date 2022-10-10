@@ -27,7 +27,7 @@
                       <span class="price-info">$ {{item.price}} </span><small class="text-muted"> {{item.extra}}</small>
                     </div>
                     <div class="w-auto">
-                      <a href="#" class="btn btn-primary btn-sm"><font-awesome-icon icon="cart-plus"></font-awesome-icon></a>
+                      <button @click="addCart(item.Id, item.burgerName, item.price, item.discount, item.imgSrc)" class="btn btn-primary btn-sm"><font-awesome-icon icon="cart-plus"></font-awesome-icon></button>
                     </div>
                   </div>
                 </div>
@@ -42,33 +42,29 @@
         <div class="title">
           <h4>Current Order</h4>
         </div>
-        <br>
-        <div class="row justify-content-between">
+        <div v-for="(item) in cart" :key="item.Id" class="row justify-content-between mb-2">
           <div class="col-md-4">
-            <img class="order-img" src="" alt="">
+            <img class="order-img" :src=item.imgSrc alt="">
           </div>
           <div class="col-md-8">
             <div class="row">
-              <div class="px-0 mb-2">Mexican Hamburger</div>
-              <div class="row justify-content-between align-items-center px-0"><span class="w-auto">$12.98</span>
+              <div class="px-0 mb-2">{{item.burgerName}}</div>
+              <div class="row justify-content-between align-items-center px-0"><span class="w-auto">$ {{item.price}}</span>
                 <span class="w-auto">
-                  <button class="btn btn-primary px-1 py-0 btn-sm">-</button>
-                  <span class="product-count ms-2 me-2 disabled">1</span>
-                  <button class="btn btn-primary px-1 py-0 btn-sm">+</button>
+                  <span class="product-count ms-2 me-2 disabled">{{item.burgerCount}}X</span>
                 </span>
               </div>
             </div>
           </div>
         </div>
-        <br><br>
         <div class="total-price-area py-4 px-3">
           <div class="subtotal">
-            <div class="row justify-content-between"><span class="w-auto">Subtotal</span><span class="w-auto">$12.98</span></div>
-            <div class="row justify-content-between"><span class="w-auto">Discount</span><span class="w-auto">$1.98</span></div>
+            <div class="row justify-content-between"><span class="w-auto">Subtotal</span><span class="w-auto">${{this.subTotal}}</span></div>
+            <div class="row justify-content-between"><span class="w-auto">Discount</span><span class="w-auto">${{this.discount}}</span></div>
           </div>
           <br>
           <div class="total">
-            <div class="row justify-content-between mt-3"><span class="w-auto">Total</span><span class="w-auto price-total">$11.0</span></div>
+            <div class="row justify-content-between mt-4"><span class="w-auto">Total</span><span class="w-auto price-total">${{this.total}}</span></div>
           </div>
         </div>
         <button class="btn btn-primary mt-4 w-100">Continue To Payment</button>
@@ -81,17 +77,45 @@
 
 export default {
   name: 'Home',
+  setup() {
+    data:{
+      return {
+        cart: [],
+        subTotal: 0,
+        discount: 0,
+        total: 0,
+      }
+    }
+  },
   computed: {
     getAllHamburgers(){
       const hamburgers = [
-        {Id: 1, burgerName: 'Mexican Hamburger', price: 12.98, discount: 0.24, imgSrc:'src/assets/images/mexican-hamburger.jpg', explanation: 'Some quick example text to build on the card title and make up the bulk of the cards content.', extra: '/with chips'},
-        {Id: 2, burgerName: 'California Hamburger', price: 13.50, discount: 1.2, imgSrc:'src/assets/images/california-hamburger.jpg', explanation: 'Some quick example text to build on the card title and make up the bulk of the cards content.', extra: '/with chips'},
-        {Id: 3, burgerName: 'Classic Hamburger', price: 7.70, discount: 0.35, imgSrc:'src/assets/images/classic-hamburger.jpg', explanation: 'Some quick example text to build on the card title and make up the bulk of the cards content.', extra: ''},
-        {Id: 4, burgerName: 'Cheeseburger', price: 11.00, discount: 0, imgSrc:'src/assets/images/cheeseburger.jpg', explanation: 'Some quick example text to build on the card title and make up the bulk of the cards content.', extra: '/with chips'},
-        {Id: 5, burgerName: 'New york Hamburger', price: 10.15, discount: 0, imgSrc:'src/assets/images/newyork-hamburger.jpg', explanation: 'Some quick example text to build on the card title and make up the bulk of the cards content.', extra: '/with chips'},
-        {Id: 6, burgerName: 'XL Hamburger', price: 14.20, discount: 0.50, imgSrc:'src/assets/images/xl-hamburger.jpg', explanation: 'Some quick example text to build on the card title and make up the bulk of the cards content.', extra: '/with chips'},
+        {Id: 1, burgerName: 'Mexican Hamburger', price: 12.95, discount: 0.25, imgSrc:'src/assets/images/mexican-hamburger.jpg', explanation: 'Some quick example text to build on the card title and make up the bulk of the cards content.'},
+        {Id: 2, burgerName: 'California Hamburger', price: 13.50, discount: 1.25, imgSrc:'src/assets/images/california-hamburger.jpg', explanation: 'Some quick example text to build on the card title and make up the bulk of the cards content.'},
+        {Id: 3, burgerName: 'Classic Hamburger', price: 7.70, discount: 0.35, imgSrc:'src/assets/images/classic-hamburger.jpg', explanation: 'Some quick example text to build on the card title and make up the bulk of the cards content.'},
+        {Id: 4, burgerName: 'Cheeseburger', price: 11.00, discount: 0, imgSrc:'src/assets/images/cheeseburger.jpg', explanation: 'Some quick example text to build on the card title and make up the bulk of the cards content.'},
+        {Id: 5, burgerName: 'New york Hamburger', price: 10.15, discount: 0, imgSrc:'src/assets/images/newyork-hamburger.jpg', explanation: 'Some quick example text to build on the card title and make up the bulk of the cards content.'},
+        {Id: 6, burgerName: 'XL Hamburger', price: 14.20, discount: 0.50, imgSrc:'src/assets/images/xl-hamburger.jpg', explanation: 'Some quick example text to build on the card title and make up the bulk of the cards content.'},
       ]
       return hamburgers
+    },
+  },
+  methods: {
+    addCart(Id, burgerName, price, discount, imgSrc) {
+      let cartData = {};
+      this.subTotal += Math.round(price);
+      this.discount += Math.round(discount*100)/100;
+      this.total = Math.round(this.subTotal - this.discount);
+      for(let item in this.cart){
+        if(this.cart[item].Id === Id){
+          this.cart[item].burgerCount++;
+          this.$forceUpdate()
+          return
+        }
+      }
+      cartData = {Id: Id, burgerName: burgerName, price: price, discount: discount, imgSrc: imgSrc, burgerCount: 1}
+      this.cart.push(cartData)
+      this.$forceUpdate()
     }
   }
 }
@@ -116,7 +140,7 @@ export default {
 }
 .order-img{
   width: 80px;
-  height: 50px;
+  height: 65px;
   border-radius: 5px;
 }
 .card{
@@ -177,5 +201,10 @@ export default {
 }
 .card-img-top{
   height: 250px;
+}
+@media screen and (min-width: 767px) {
+  .title{
+    margin-bottom: 60px;
+  }
 }
 </style>
