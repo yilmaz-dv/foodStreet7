@@ -16,6 +16,7 @@
     "bootstrap": "^5.0.1",
     "font-awesome": "^4.7.0",
     "vue": "^3.2.37",
+    "vue-router": "^4.0.13",
     "vuex": "^4.0.2"
   },
   "devDependencies": {

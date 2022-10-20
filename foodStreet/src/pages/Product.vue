@@ -51,7 +51,9 @@
               <div class="px-0 mb-2">{{item.burgerName}}</div>
               <div class="row justify-content-between align-items-center px-0"><span class="w-auto">$ {{item.price}}</span>
                 <span class="w-auto">
+                  <span @click="removeCart(item.Id, item.burgerName, item.price, item.discount)" class="btn remove-cart">-</span>
                   <span class="product-count ms-2 me-2 disabled">{{item.burgerCount}}X</span>
+                  <span @click="addCart(item.Id, item.burgerName, item.price, item.discount, item.imgSrc)" class="btn add-cart">+</span>
                 </span>
               </div>
             </div>
@@ -67,7 +69,7 @@
             <div class="row justify-content-between mt-4"><span class="w-auto">Total</span><span class="w-auto price-total">${{this.total}}</span></div>
           </div>
         </div>
-        <button class="btn btn-primary mt-4 w-100">Continue To Payment</button>
+        <router-link tag="button" to="/Payment" class="btn btn-primary mt-4 w-100">Continue To Payment</router-link>
       </div>
     </div>
   </div>
@@ -78,13 +80,11 @@
 export default {
   name: 'Home',
   setup() {
-    data:{
       return {
         cart: [],
         subTotal: 0,
         discount: 0,
         total: 0,
-      }
     }
   },
   computed: {
@@ -92,7 +92,7 @@ export default {
       const hamburgers = [
         {Id: 1, burgerName: 'Mexican Hamburger', price: 12.95, discount: 0.25, imgSrc:'src/assets/images/mexican-hamburger.jpg', explanation: 'Some quick example text to build on the card title and make up the bulk of the cards content.'},
         {Id: 2, burgerName: 'California Hamburger', price: 13.50, discount: 1.25, imgSrc:'src/assets/images/california-hamburger.jpg', explanation: 'Some quick example text to build on the card title and make up the bulk of the cards content.'},
-        {Id: 3, burgerName: 'Classic Hamburger', price: 7.70, discount: 0.35, imgSrc:'src/assets/images/classic-hamburger.jpg', explanation: 'Some quick example text to build on the card title and make up the bulk of the cards content.'},
+        {Id: 3, burgerName: 'Classic Hamburger', price: 8.0, discount: 0, imgSrc:'src/assets/images/classic-hamburger.jpg', explanation: 'Some quick example text to build on the card title and make up the bulk of the cards content.'},
         {Id: 4, burgerName: 'Cheeseburger', price: 11.00, discount: 0, imgSrc:'src/assets/images/cheeseburger.jpg', explanation: 'Some quick example text to build on the card title and make up the bulk of the cards content.'},
         {Id: 5, burgerName: 'New york Hamburger', price: 10.15, discount: 0, imgSrc:'src/assets/images/newyork-hamburger.jpg', explanation: 'Some quick example text to build on the card title and make up the bulk of the cards content.'},
         {Id: 6, burgerName: 'XL Hamburger', price: 14.20, discount: 0.50, imgSrc:'src/assets/images/xl-hamburger.jpg', explanation: 'Some quick example text to build on the card title and make up the bulk of the cards content.'},
@@ -116,6 +116,20 @@ export default {
       cartData = {Id: Id, burgerName: burgerName, price: price, discount: discount, imgSrc: imgSrc, burgerCount: 1}
       this.cart.push(cartData)
       this.$forceUpdate()
+    },
+    removeCart(Id, burgerName, price, discount){
+      this.subTotal -= Math.round(price);
+      this.discount -= Math.round(discount*100)/100;
+      this.total = Math.round(this.subTotal - this.discount);
+      for (let item in this.cart){
+        if(this.cart[item].Id === Id){
+          this.cart[item].burgerCount--;
+        }
+        if(this.cart[item].burgerCount === 0){
+          this.cart.splice(item, 1)
+        }
+        this.$forceUpdate()
+      }
     }
   }
 }
@@ -201,6 +215,11 @@ export default {
 }
 .card-img-top{
   height: 250px;
+}
+.remove-cart, .add-cart{
+  background: #F46801;
+  color: #fff;
+  padding: 0px 5px;
 }
 @media screen and (min-width: 767px) {
   .title{
