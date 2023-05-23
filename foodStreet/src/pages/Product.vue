@@ -69,7 +69,7 @@
             <div class="row justify-content-between mt-4"><span class="w-auto">Total</span><span class="w-auto price-total">${{this.total}}</span></div>
           </div>
         </div>
-        <router-link tag="button" to="/Payment" class="btn btn-primary mt-4 w-100">Continue To Payment</router-link>
+        <router-link @click="calculate()" tag="button" to="/Payment" class="btn btn-primary mt-4 w-100">Continue To Payment</router-link>
       </div>
     </div>
   </div>
@@ -99,6 +99,9 @@ export default {
       ]
       return hamburgers
     },
+  },
+  mounted() {
+    localStorage.clear();
   },
   methods: {
     addCart(Id, burgerName, price, discount, imgSrc) {
@@ -130,15 +133,17 @@ export default {
         }
         this.$forceUpdate()
       }
+    },
+    calculate(){
+      localStorage.setItem("subTotal", this.subTotal);
+      localStorage.setItem("Total", this.total);
     }
   }
 }
 </script>
 
 <style scoped>
-.container, .food-area{
-  margin-top: 4em;
-}
+
 .text-muted{
   font-size: 12px;
 }

@@ -8,3 +8,6 @@ html, #app{
   color: #fff !important;
   border-color: #F46801 !important;
 }
+.container, .food-area{
+  margin-top: 4em;
+}
