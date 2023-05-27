@@ -23,6 +23,7 @@
           <input maxlength="" type="text" class="form-control me-4" id="InputPromo" v-model="promotion" placeholder="Promotion Code">
           <button type="button" @click="applyPromo()" class="btn btn-success">Apply</button>
         </div>
+        <small class="valid-promo d-none">Enter a valid promotion code or continue to payment</small>
       </div>
     </form>
     <div class="col-md-4 total-payment">
@@ -41,9 +42,7 @@
       <div class="row">
         <button type="submit" class="btn btn-primary mt-5">Make Payment</button>
       </div>
-
     </div>
-
   </div>
 </div>
 </template>
@@ -62,15 +61,23 @@ export default {
   mounted() {
     this.subTotal = parseFloat(localStorage.getItem("subTotal"));
     this.total = parseFloat(localStorage.getItem("Total"));
+    this.$forceUpdate();
   },
   methods: {
     CheckCardNumber(e){
       e.target.value = e.target.value.replace(/[^\dA-Z]/g, '').replace(/(.{4})/g, '$1 ').trim();
     },
     applyPromo(){
-      this.promo = 3.5;
-      if(this.promotion === "f7"){
+      let element = document.getElementsByClassName('valid-promo');
+      if(this.promotion === "food7reet"){
+        this.promo = 3.5;
         this.total = this.subTotal - this.promo;
+        element[0].classList.add('d-none');
+      }
+      else {
+        this.promo = 0;
+        this.total = this.subTotal;
+        element[0].classList.remove('d-none');
       }
       this.$forceUpdate();
     }
@@ -87,5 +94,9 @@ export default {
 }
 .payment{
   color: #999999;
+}
+.valid-promo{
+  position: absolute;
+  color: darkred;
 }
 </style>
